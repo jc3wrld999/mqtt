@@ -1,9 +1,9 @@
 ## MQTT-JAVA
 
 
-![image](https://user-images.githubusercontent.com/61821641/187130487-9ac58163-53c4-4d5f-868f-ad2fa8bf2787.png)
+![image](https://user-images.githubusercontent.com/61821641/187131455-b6ef639e-82d3-4b7d-9a96-33f4a543eb0d.png)
 
-## Broker (mosquitto)
+### broker (mosquitto)
 
 ```sh
 mosquitto
@@ -11,7 +11,24 @@ mosquitto
 
 ![image](https://user-images.githubusercontent.com/61821641/187130577-e9a5416b-1f4a-421c-9f08-332e529f6b52.png)
 
-## web server (publisher)
+### publisher
+
+```xml
+	<repositories>
+	    <repository>
+	        <id>Eclipse Paho Repo</id>
+	        <url>https://repo.eclipse.org/content/repositories/paho-releases/</url>
+	    </repository>
+	</repositories>
+		
+	<dependencies>
+		<dependency>
+		    <groupId>org.eclipse.paho</groupId>
+		    <artifactId>org.eclipse.paho.client.mqttv3</artifactId>
+		    <version>1.0.2</version>
+		</dependency>
+	</dependencies>
+```
 
 ```java
 import java.net.SocketException;
@@ -79,8 +96,11 @@ public class MqttPublisher {
 
 ```
 
-## Client (subscriber)
+### subscriber
 
+```gradle
+	implementation 'org.eclipse.paho:org.eclipse.paho.client.mqttv3:1.2.5'
+```
 ```java
 		String topic        = "topic/test";
 		int qos             = 2;
@@ -120,5 +140,11 @@ public class MqttPublisher {
 //		System.exit(0);
 ```
 
+![image](https://user-images.githubusercontent.com/61821641/187131288-642ef447-8c62-4577-8771-6436a29b057e.png)
+- 좌: publisher
+- 우: subscriver
+
 ## References
-- [_](https://www.genuitec.com/introduction-to-mqtt-protocol/)
+- [pub-sub example(온도)](https://www.genuitec.com/introduction-to-mqtt-protocol/)
+- [hivemq](https://www.hivemq.com/blog/mqtt-client-library-encyclopedia-eclipse-paho-java/)
+- 

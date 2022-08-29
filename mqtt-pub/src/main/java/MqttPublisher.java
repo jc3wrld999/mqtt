@@ -31,11 +31,9 @@ public class MqttPublisher {
 			if (client != null) {
 				client.connect(options);
 			 
-			    if (!client.isConnected()) {
-			        client.publish("topic", new MqttMessage("Message".getBytes()));
-				}
-				
-	//			client.setKeepAlive(100);
+//			    if (!client.isConnected()) {
+//			        client.publish("topic", new MqttMessage("Message".getBytes()));
+//				}
 				while (true) {
 					// 4. 매초마다 publish
 					publishRandom(client);
