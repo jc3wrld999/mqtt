@@ -2,6 +2,9 @@ package com.mqtt.sub;
 
 import java.net.SocketException;
 
+import javax.annotation.PostConstruct;
+import javax.annotation.PreDestroy;
+
 import org.eclipse.paho.client.mqttv3.IMqttDeliveryToken;
 import org.eclipse.paho.client.mqttv3.MqttCallback;
 import org.eclipse.paho.client.mqttv3.MqttClient;
@@ -10,29 +13,35 @@ import org.eclipse.paho.client.mqttv3.MqttException;
 import org.eclipse.paho.client.mqttv3.MqttMessage;
 import org.eclipse.paho.client.mqttv3.MqttSecurityException;
 import org.eclipse.paho.client.mqttv3.persist.MemoryPersistence;
-import org.springframework.boot.SpringBootConfiguration;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RestController;	
+import org.springframework.stereotype.Component;
 
-@SpringBootConfiguration
-@RestController
-public class MqttClientController {
+import lombok.extern.slf4j.Slf4j;
+
+
+@Component
+@Slf4j
+public class ConstructBean {
+
+	private MqttClient client;
 	
-	@GetMapping("/hello")
-	public String hello() throws MqttSecurityException, SocketException, MqttException {
-		
+    @PostConstruct
+    public void init() throws MqttSecurityException, SocketException, MqttException {
+        log.info("spring tomcat start");
+        log.info("-----------------------------------------");
 		String topic        = "topic/test";
 		int qos             = 2;
 		String broker       = "tcp://192.168.0.141:1883";
 		String clientId     = "client22";
 		MemoryPersistence persistence = new MemoryPersistence();
 
-		MqttClient client = new MqttClient(broker, clientId, persistence);
+		client = new MqttClient(broker, clientId, persistence);
 		MqttConnectOptions connOpts = new MqttConnectOptions();
 		connOpts.setCleanSession(true);
-		System.out.println("Connecting to broker: "+broker);
+		
+		log.info("Connecting to broker: ", broker);
 		client.connect(connOpts);
-		System.out.println("Connected");
+		log.info("Connected");
+		log.info("-----------------------------------------");
 
 
 		client.setCallback(new MqttCallback() {
@@ -54,10 +63,14 @@ public class MqttClientController {
 		        
 		client.subscribe(topic, qos);
 
-//		client.disconnect();
-//		System.out.println("Disconnected");
-//		System.exit(0);
-		
-		return "test";
-	}
+
+    }
+    
+    @PreDestroy
+    public void preDestroy() throws MqttException {
+		client.disconnect();
+		log.info("Disconnected");
+		log.info("-----------------------------------------");
+		System.exit(0); 
+    }
 }

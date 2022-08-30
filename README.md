@@ -3,6 +3,8 @@
 
 ![image](https://user-images.githubusercontent.com/61821641/187131455-b6ef639e-82d3-4b7d-9a96-33f4a543eb0d.png)
 
+## 1. 기본 연결
+
 ### broker (mosquitto)
 
 ```sh
@@ -14,20 +16,20 @@ mosquitto
 ### publisher
 
 ```xml
-	<repositories>
-	    <repository>
-	        <id>Eclipse Paho Repo</id>
-	        <url>https://repo.eclipse.org/content/repositories/paho-releases/</url>
-	    </repository>
-	</repositories>
-		
-	<dependencies>
-		<dependency>
-		    <groupId>org.eclipse.paho</groupId>
-		    <artifactId>org.eclipse.paho.client.mqttv3</artifactId>
-		    <version>1.0.2</version>
-		</dependency>
-	</dependencies>
+<repositories>
+    <repository>
+        <id>Eclipse Paho Repo</id>
+        <url>https://repo.eclipse.org/content/repositories/paho-releases/</url>
+    </repository>
+</repositories>
+    
+<dependencies>
+    <dependency>
+        <groupId>org.eclipse.paho</groupId>
+        <artifactId>org.eclipse.paho.client.mqttv3</artifactId>
+        <version>1.0.2</version>
+    </dependency>
+</dependencies>
 ```
 
 ```java
@@ -99,41 +101,41 @@ public class MqttPublisher {
 ### subscriber
 
 ```gradle
-	implementation 'org.eclipse.paho:org.eclipse.paho.client.mqttv3:1.2.5'
+implementation 'org.eclipse.paho:org.eclipse.paho.client.mqttv3:1.2.5'
 ```
 ```java
-		String topic        = "topic/test";
-		int qos             = 2;
-		String broker       = "tcp://192.168.0.141:1883";
-		String clientId     = "client22";
-		MemoryPersistence persistence = new MemoryPersistence();
+String topic        = "topic/test";
+int qos             = 2;
+String broker       = "tcp://192.168.0.141:1883";
+String clientId     = "client22";
+MemoryPersistence persistence = new MemoryPersistence();
 
-		MqttClient client = new MqttClient(broker, clientId, persistence);
-		MqttConnectOptions connOpts = new MqttConnectOptions();
-		connOpts.setCleanSession(true);
-		System.out.println("Connecting to broker: "+broker);
-		client.connect(connOpts);
-		System.out.println("Connected");
-
-
-		client.setCallback(new MqttCallback() {
-
-		    @Override
-		    public void connectionLost(Throwable cause) { //Called when the client lost the connection to the broker 
-		    }
-
-		    @Override
-		    public void messageArrived(String topic, MqttMessage message) throws Exception {
-		        System.out.println(topic + ": " + new String(message.getPayload()));
-		    }
+MqttClient client = new MqttClient(broker, clientId, persistence);
+MqttConnectOptions connOpts = new MqttConnectOptions();
+connOpts.setCleanSession(true);
+System.out.println("Connecting to broker: "+broker);
+client.connect(connOpts);
+System.out.println("Connected");
 
 
-			@Override
-			public void deliveryComplete(IMqttDeliveryToken token) {	
-			}
-		});
-		        
-		client.subscribe(topic, qos);
+client.setCallback(new MqttCallback() {
+
+    @Override
+    public void connectionLost(Throwable cause) { //Called when the client lost the connection to the broker 
+    }
+
+    @Override
+    public void messageArrived(String topic, MqttMessage message) throws Exception {
+        System.out.println(topic + ": " + new String(message.getPayload()));
+    }
+
+
+    @Override
+    public void deliveryComplete(IMqttDeliveryToken token) {	
+    }
+});
+        
+client.subscribe(topic, qos);
 
 //		client.disconnect();
 //		System.out.println("Disconnected");
@@ -144,7 +146,11 @@ public class MqttPublisher {
 - 좌: publisher
 - 우: subscriver
 
+## 
+
 ## References
 - [pub-sub example(온도)](https://www.genuitec.com/introduction-to-mqtt-protocol/)
-- [hivemq](https://www.hivemq.com/blog/mqtt-client-library-encyclopedia-eclipse-paho-java/)
-- 
+- [spring boot mqtt demo](https://github.com/frensley/springboot-mqtt-demo)
+- [hivemq eclipse paho java](https://www.hivemq.com/blog/mqtt-client-library-encyclopedia-eclipse-paho-java/)
+- [hivemq topic, wild card example](https://www.hivemq.com/blog/mqtt-essentials-part-5-mqtt-topics-best-practices/)
+- [spring 시작시 로직 수행](https://www.baeldung.com/running-setup-logic-on-startup-in-spring)
