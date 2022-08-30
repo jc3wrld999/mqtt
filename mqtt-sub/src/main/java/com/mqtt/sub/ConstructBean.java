@@ -15,7 +15,7 @@ import org.eclipse.paho.client.mqttv3.MqttSecurityException;
 import org.eclipse.paho.client.mqttv3.persist.MemoryPersistence;
 import org.springframework.stereotype.Component;
 
-import lombok.extern.slf4j.Slf4j;
+import lombok.extern.slf4j.Slf4j;		
 
 
 @Component
@@ -23,15 +23,17 @@ import lombok.extern.slf4j.Slf4j;
 public class ConstructBean {
 
 	private MqttClient client;
+	private int qos             = 2;
+	private String broker       = "tcp://192.168.0.141:1883";
+	private String clientId     = "client22";
 	
     @PostConstruct
     public void init() throws MqttSecurityException, SocketException, MqttException {
+    	log.info("-----------------------------------------");
         log.info("spring tomcat start");
         log.info("-----------------------------------------");
 		String topic        = "topic/test";
-		int qos             = 2;
-		String broker       = "tcp://192.168.0.141:1883";
-		String clientId     = "client22";
+
 		MemoryPersistence persistence = new MemoryPersistence();
 
 		client = new MqttClient(broker, clientId, persistence);
@@ -47,14 +49,14 @@ public class ConstructBean {
 		client.setCallback(new MqttCallback() {
 
 		    @Override
-		    public void connectionLost(Throwable cause) { //Called when the client lost the connection to the broker 
+		    public void connectionLost(Throwable cause) { 
+		    	log.info("클라이언트가 브로커에 대한 연결이 끊겼습니다.");
 		    }
 
 		    @Override
 		    public void messageArrived(String topic, MqttMessage message) throws Exception {
-		        System.out.println(topic + ": " + new String(message.getPayload()));
+		    	log.info(topic, ": ", new String(message.getPayload()));
 		    }
-
 
 			@Override
 			public void deliveryComplete(IMqttDeliveryToken token) {	
@@ -69,8 +71,8 @@ public class ConstructBean {
     @PreDestroy
     public void preDestroy() throws MqttException {
 		client.disconnect();
-		log.info("Disconnected");
 		log.info("-----------------------------------------");
+		log.info("Disconnected");
 		System.exit(0); 
     }
 }
